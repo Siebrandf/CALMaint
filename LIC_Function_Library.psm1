@@ -1180,4 +1180,3 @@ Function Pause ($Message = "Press any key to continue...") {
       $KeyInfo = $Host.UI.RawUI.ReadKey("NoEcho, IncludeKeyDown")
    }
 }
-
