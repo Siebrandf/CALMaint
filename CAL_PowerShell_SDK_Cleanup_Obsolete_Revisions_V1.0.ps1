@@ -1,23 +1,31 @@
 ﻿<# 
     .Synopsis 
-        --- Removes obsolete layer revisions ---
+        --- Housekeeping the App Layering Applicance by removal of obsolete layer revisions ---
     .Description 
         Retrievs all revisions available for a given Layer type (OS, Platform or App) and delete the ones not assigned while keep the last two.
     .Example 
-        CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions_V1.0.ps1 -LayerType AppLayer -Environment DTA
+        CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions_V1.0.ps1 -LayerType AppLayer -Environment DTA -Confirm $false
     #>
      param(
-    # The LayerType to process, either OSLayer or Applayer.
+    # The LayerType to process, either OSLayer, PlatFormLayer or Applayer.
     [parameter(Mandatory=$true)]
     [ValidateSet("OSLayer", "PlatFormLayer",  "AppLayer")]
     $LayerType,
     [parameter(Mandatory=$false)]
     [ValidateSet("DTA", "PROD")]
-    $Environment = "DTA"
+    $Environment = "DTA",
+    [parameter(Mandatory=$false)]
+    [ValidateSet($true, $false)]
+    $Confirm = $true    
     )  
 
 # Define error action preference
 $ErrorActionPreference = "Continue"
+
+# Define Script Variables
+$DevCalApl = "yourdevapplianceunchere"
+$ProdCalApl = "yourdevapplianceunchere"
+$Skiplast "2"
 
 function Get-ScriptDirectory {
     if ($psise) {Split-Path $psise.CurrentFile.FullPath}
@@ -36,11 +44,11 @@ if ($Credential -eq $null){
     break
 }
 
-# Connect to the DEV Appliance
-if ($Environment -eq "DTA"){$apdevlip = "agofxdelmd01.nac.ppg.com"}
-elseif ($Environment -eq "PROD"){$apdevlip = "agofxdelm01.nac.ppg.com"}
-Write-Host "$(Write-TimeNumberSign) Selected Applicance: [$($apdevlip.ToUpper())]" -ForegroundColor Yellow
-$ALWebSession = Connect-alsession -aplip $apdevlip -Credential $Credential
+# Connect to the Appliance
+if ($Environment -eq "DTA"){$calapl = $DevCalApl}
+elseif ($Environment -eq "PROD"){$calapl = $ProdCalApl}
+Write-Host "$(Write-TimeNumberSign) Selected Applicance: [$($calapl.ToUpper())]" -ForegroundColor Yellow
+$ALWebSession = Connect-alsession -aplip $calapl -Credential $Credential
 
 # Get Fileshare details from the appliance
 $fileshare = Get-ALRemoteshare -websession $ALWebSession
@@ -67,7 +75,7 @@ Write-Host "$(Write-TimeIndent) Layer to process is of type: $LayerType" -Foregr
         Write-Host "$(Write-TimeIndent) Most recent layer revision for [$($ALAppLayer.Name)] is [$($ALAppLayerLatestRevision.DisplayedVersion)]" -ForegroundColor Yellow
             
         # Retrieve all but the last two layerrevisions which can be deleted and being older than than the most recent assigned revision
-        $AllAppLayerRevsCanDelete = $ALAppLayerRevisions.Revisions.AppLayerRevisionDetail | where {$_.Candelete -eq $True -and ($_.DisplayedVersion -lt $ALAppLayerLatestRevision.DisplayedVersion)} | sort DisplayedVersion | select -SkipLast 2
+        $AllAppLayerRevsCanDelete = $ALAppLayerRevisions.Revisions.AppLayerRevisionDetail | where {$_.Candelete -eq $True -and ($_.DisplayedVersion -lt $ALAppLayerLatestRevision.DisplayedVersion)} | sort DisplayedVersion | select -SkipLast $Skiplast
         if ($AllAppLayerRevsCanDelete -eq $null){
             Write-Host "$(Write-TimeIndent) No obsolete layer revisionsavailable for layer: [$($ALAppLayer.Name)], Continue" -ForegroundColor Yellow
             Continue
@@ -77,7 +85,7 @@ Write-Host "$(Write-TimeIndent) Layer to process is of type: $LayerType" -Foregr
 
         foreach ($AppLayerRevCanDelete in $AllAppLayerRevsCanDelete){
             Write-Host "$(Write-TimeIndent) Process Layer Revision [$($AppLayerRevCanDelete.DisplayedVersion)] with id [$($AppLayerRevCanDelete.id)])" -ForegroundColor Yellow
-            Try {Remove-ALAppLayerRev -websession $ALWebSession -appid $AppLayerRevCanDelete.Layerid -apprevid $AppLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable AppLayerRevDeleted -Confirm:$true | Out-Null
+            Try {Remove-ALAppLayerRev -websession $ALWebSession -appid $AppLayerRevCanDelete.Layerid -apprevid $AppLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable AppLayerRevDeleted -Confirm:$Confirm | Out-Null
             } Catch [Exception] {Write-Error "$(Write-TimeIndent) Remove-ALAppLayerRev - $_"}
                     
                 # Get-Status and loop while task status is running
@@ -124,7 +132,7 @@ Write-Host "$(Write-TimeIndent) Layer to process is of type: $LayerType" -Foregr
         Write-Host "$(Write-TimeIndent) Most recent layer revision for [$($ALOsLayer.Name)] is [$($ALOsLayerLatestRevision.DisplayedVersion)]" -ForegroundColor Yellow
             
         # Retrieve all but the last two layerrevisions which can be deleted and being older than than the most recent assigned revision
-        $AllOsLayerRevsCanDelete = $ALOsLayerRevisions.Revisions.OsLayerRevisionDetail | where {$_.Candelete -eq $True -and ($_.DisplayedVersion -lt $ALOsLayerLatestRevision.DisplayedVersion) -and ($_.DisplayedVersion -notmatch "1803R")} | sort DisplayedVersion | select -SkipLast 2
+        $AllOsLayerRevsCanDelete = $ALOsLayerRevisions.Revisions.OsLayerRevisionDetail | where {$_.Candelete -eq $True -and ($_.DisplayedVersion -lt $ALOsLayerLatestRevision.DisplayedVersion) -and ($_.DisplayedVersion -notmatch "1803R")} | sort DisplayedVersion | select -SkipLast $Skiplast
         if ($AllOsLayerRevsCanDelete -eq $null){
             Write-Host "$(Write-TimeIndent) No obsolete layer revisionsavailable for layer: [$($ALOsLayer.Name)], Continue" -ForegroundColor Yellow
             Continue
@@ -134,7 +142,7 @@ Write-Host "$(Write-TimeIndent) Layer to process is of type: $LayerType" -Foregr
 
         foreach ($OsLayerRevCanDelete in $AllOsLayerRevsCanDelete){
             Write-Host "$(Write-TimeIndent) Process Layer Revision [$($OsLayerRevCanDelete.DisplayedVersion)] with id [$($OsLayerRevCanDelete.id)])" -ForegroundColor Yellow
-            Try {Remove-ALOsLayerRev -websession $ALWebSession -Osid $OsLayerRevCanDelete.Layerid -Osrevid $OsLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable OsLayerRevDeleted -Confirm:$false | Out-Null
+            Try {Remove-ALOsLayerRev -websession $ALWebSession -Osid $OsLayerRevCanDelete.Layerid -Osrevid $OsLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable OsLayerRevDeleted -Confirm:$Confirm| Out-Null
             } Catch [Exception] {Write-Error "$(Write-TimeIndent) Remove-ALOsLayerRev - $_"}
                     
                 # Get-Status and loop while task status is running
@@ -181,7 +189,7 @@ Write-Host "$(Write-TimeIndent) Layer to process is of type: $LayerType" -Foregr
         Write-Host "$(Write-TimeIndent) MPlatformt recent layer revision for [$($ALPlatformLayer.Name)] is [$($ALPlatformLayerLatestRevision.DisplayedVersion)]" -ForegroundColor Yellow
             
         # Retrieve all but the last two layerrevisions which can be deleted and being older than than the mPlatformt recent assigned revision
-        $AllPlatformLayerRevsCanDelete = $ALPlatformLayerRevisions.Revisions.PlatformLayerRevisionDetail | where {$_.Candelete -eq $True -and ($_.DisplayedVersion -lt $ALPlatformLayerLatestRevision.DisplayedVersion)} | sort DisplayedVersion | select -SkipLast 2
+        $AllPlatformLayerRevsCanDelete = $ALPlatformLayerRevisions.Revisions.PlatformLayerRevisionDetail | where {$_.Candelete -eq $True -and ($_.DisplayedVersion -lt $ALPlatformLayerLatestRevision.DisplayedVersion)} | sort DisplayedVersion | select -SkipLast $Skiplast
         if ($AllPlatformLayerRevsCanDelete -eq $null){
             Write-Host "$(Write-TimeIndent) No obsolete layer revisionsavailable for layer: [$($ALPlatformLayer.Name)], Continue" -ForegroundColor Yellow
             Continue
@@ -191,7 +199,7 @@ Write-Host "$(Write-TimeIndent) Layer to process is of type: $LayerType" -Foregr
 
         foreach ($PlatformLayerRevCanDelete in $AllPlatformLayerRevsCanDelete){
             Write-Host "$(Write-TimeIndent) Process Layer Revision [$($PlatformLayerRevCanDelete.DisplayedVersion)] with id [$($PlatformLayerRevCanDelete.id)])" -ForegroundColor Yellow
-            Try {Remove-ALPlatformLayerRev -websession $ALWebSession -Platformid $PlatformLayerRevCanDelete.Layerid -Platformrevid $PlatformLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable PlatformLayerRevDeleted -Confirm:$true | Out-Null
+            Try {Remove-ALPlatformLayerRev -websession $ALWebSession -Platformid $PlatformLayerRevCanDelete.Layerid -Platformrevid $PlatformLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable PlatformLayerRevDeleted -Confirm:$Confirm | Out-Null
             } Catch [Exception] {Write-Error "$(Write-TimeIndent) Remove-ALPlatformLayerRev - $_"}
                     
                 # Get-Status and loop while task status is running
