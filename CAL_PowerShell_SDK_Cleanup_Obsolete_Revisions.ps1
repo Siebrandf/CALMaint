@@ -6,18 +6,20 @@
     .Example 
         CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1 -LayerType AppLayer -Environment DTA -Confirm:$false
     #>
-     param(
-    # The LayerType to process, either OSLayer, PlatFormLayer or Applayer.
-    [parameter(Mandatory=$true)]
-    [ValidateSet("OSLayer", "PlatFormLayer",  "AppLayer")]
-    $LayerType,
-    [parameter(Mandatory=$false)]
-    [ValidateSet("DTA", "PROD")]
-    $Environment = "DTA",
-    [parameter(Mandatory=$false)]
-    [ValidateSet($true, $false)]
-    $Confirm = $true    
-    )  
+
+[cmdletbinding(SupportsShouldProcess=$True)]
+
+param(
+# The LayerType to process, either OSLayer, PlatFormLayer or Applayer.
+[parameter(Mandatory=$true)]
+[ValidateSet("OSLayer", "PlatFormLayer",  "AppLayer")]
+$LayerType,
+[parameter(Mandatory=$false)]
+[ValidateSet("DTA", "PROD")]
+$Environment = "DTA",
+[parameter(Mandatory=$false)]
+$Skiplast = "2" 
+)  
 
 # Define error action preference
 $ErrorActionPreference = "Continue"
@@ -25,7 +27,7 @@ $ErrorActionPreference = "Continue"
 # Define Script Variables
 $DevCalApl = "yourdevapplianceunchere"
 $ProdCalApl = "yourdevapplianceunchere"
-$Skiplast = "2"
+
 
 function Get-ScriptDirectory {
     if ($psise) {Split-Path $psise.CurrentFile.FullPath}
@@ -34,8 +36,6 @@ function Get-ScriptDirectory {
 
 # MODULES -----------------------
 Import-Module "$(Get-ScriptDirectory)\LIC_Function_Library.psm1" -DisableNameChecking
-# install-Module -Name ctxal-sdk -Verbose -Scope AllUsers
-# Update-Module -Name ctxal-sdk
 
 # Appliance Creds
 Write-Host "$(Write-TimeNumberSign) Please enter your user name and password to access the CAL appliance." -ForegroundColor Yellow
