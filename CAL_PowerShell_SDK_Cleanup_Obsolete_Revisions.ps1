@@ -4,7 +4,7 @@
     .Description 
         Retrievs all revisions available for a given Layer type (OS, Platform or App) and delete the ones not assigned while keep the last two.
     .Example 
-        CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1 -LayerType AppLayer -Environment DTA -Confirm $false
+        CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1 -LayerType AppLayer -Environment DTA -Confirm:$false
     #>
      param(
     # The LayerType to process, either OSLayer, PlatFormLayer or Applayer.
@@ -25,7 +25,7 @@ $ErrorActionPreference = "Continue"
 # Define Script Variables
 $DevCalApl = "yourdevapplianceunchere"
 $ProdCalApl = "yourdevapplianceunchere"
-$Skiplast "2"
+$Skiplast = "2"
 
 function Get-ScriptDirectory {
     if ($psise) {Split-Path $psise.CurrentFile.FullPath}
@@ -34,6 +34,7 @@ function Get-ScriptDirectory {
 
 # MODULES -----------------------
 Import-Module "$(Get-ScriptDirectory)\LIC_Function_Library.psm1" -DisableNameChecking
+# install-Module -Name ctxal-sdk -Verbose -Scope AllUsers
 # Update-Module -Name ctxal-sdk
 
 # Appliance Creds
@@ -54,15 +55,12 @@ $ALWebSession = Connect-alsession -aplip $calapl -Credential $Credential
 $fileshare = Get-ALRemoteshare -websession $ALWebSession
 if ($fileshare -eq $null){Write-Error "$(Write-TimeIndent) Fileshare could not be determined. EXITING...";Break}
 
-# Create an Array including all layers revision details. 
-$AllAppLayersCanDelete = [System.Collections.ArrayList]@()
-
-### Script ####
+### Main Script ####
 
 if ($LayerType -eq "AppLayer"){
 Write-Host "$(Write-TimeIndent) Layer to process is of type: $LayerType" -ForegroundColor Yellow
 
-    # Get teh layers for the given layertype
+    # Get the layers for the given layertype
     Write-Host "$(Write-TimeIndent) Retrieve all Layers of type: $LayerType" -ForegroundColor Yellow
     $ALAppLayers = Get-ALAppLayer -websession $ALWebSession
  
@@ -74,8 +72,8 @@ Write-Host "$(Write-TimeIndent) Layer to process is of type: $LayerType" -Foregr
         $ALAppLayerLatestRevision = $ALAppLayerRevisions.Revisions.AppLayerRevisionDetail | Where-Object {$_.State -eq "Deployable"} | Sort-Object DisplayedVersion -Descending | Select-Object -First 1
         Write-Host "$(Write-TimeIndent) Most recent layer revision for [$($ALAppLayer.Name)] is [$($ALAppLayerLatestRevision.DisplayedVersion)]" -ForegroundColor Yellow
             
-        # Retrieve all but the last two layerrevisions which can be deleted and being older than than the most recent assigned revision
-        $AllAppLayerRevsCanDelete = $ALAppLayerRevisions.Revisions.AppLayerRevisionDetail | where {$_.Candelete -eq $True -and ($_.DisplayedVersion -lt $ALAppLayerLatestRevision.DisplayedVersion)} | sort DisplayedVersion | select -SkipLast $Skiplast
+        # Retrieve all but the last '$Skiplast' layerrevisions which can be deleted and being older than than the most recent assigned revision
+        $AllAppLayerRevsCanDelete = $ALAppLayerRevisions.Revisions.AppLayerRevisionDetail | Where-Object {$_.Candelete -eq $True -and ($_.DisplayedVersion -lt $ALAppLayerLatestRevision.DisplayedVersion)} | Sort-Object DisplayedVersion | Select-Object -SkipLast $Skiplast
         if ($AllAppLayerRevsCanDelete -eq $null){
             Write-Host "$(Write-TimeIndent) No obsolete layer revisionsavailable for layer: [$($ALAppLayer.Name)], Continue" -ForegroundColor Yellow
             Continue
