@@ -1,7 +1,8 @@
 # CALMaint
 Citrix Application Layering Maintenance
 
-# Citrix App Layering Appliance Houskeeping based on the Citrix App Layering PowerShell SDK
+# Citrix App Layering Appliance Houskeeping 
+Based on the Citrix App Layering PowerShell SDK
 
 This script is based on a reversed engineered SDK that emulates the SOAP calls that AL uses to manage the appliance.
 Currently only supports version **4.11 or later**.  **THIS USES UNSUPPORTED API CALLS.  PLEASE USE WITH CAUTION.**
