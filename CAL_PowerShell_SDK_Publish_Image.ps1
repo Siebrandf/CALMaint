@@ -26,13 +26,18 @@ $Inputpath, # provide the path to the Images4$Environment.csv file containing th
 $Credential = [System.Management.Automation.PSCredential]::Empty
 )
 
-# Provide Global Variables ###
-$VerbosePreference = "silentlycontinue"
+# Define error action preference
+$ErrorActionPreference = "Continue"
+
+# Variables
+$Skiplast = "3"
+$DTAApliance = "agofxdelmd01.nac.ppg.com"
+$PRODAppliance = "agofxdelm01.nac.ppg.com"
 $imagetopublish = @()
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 # LOGGING and FUNCTIONS
-$logpath = "\\nac.ppg.com\dfs\Citrix\Sources\XD\Scripts\Logs"
+$logpath = "loguncpathhere"
 if (!(test-path $logpath)){try{New-Item -ItemType directory -Path $loglocation -Force}catch [Exception]{Write-warning $_.Exception.Message}}
 $LogFile = "CAL_PowerShell_SDK_Publish_Image.log"
 $LogFileName = $logpath + "\$LogFile"
@@ -100,10 +105,11 @@ if ($Inputpath)
 }
 
 # Connect to the DEV Appliance
-if ($Environment -eq "DTA"){$apdevlip = "agofxdelmd01.nac.ppg.com"}
-elseif ($Environment -eq "DEV"){$apdevlip = "agofxdelmd01.nac.ppg.com"}
-elseif ($Environment -eq "ACC"){$apdevlip = "agofxdelmd01.nac.ppg.com"}
-elseif ($Environment -eq "PROD"){$apdevlip = "agofxdelm01.nac.ppg.com"}
+if ($Environment -eq "DTA"){$apdevlip = $DTAApliance}
+elseif ($Environment -eq "DEV"){$apdevlip = $PRODAppliance}
+elseif ($Environment -eq "ACC"){$apdevlip = $PRODAppliance}
+elseif ($Environment -eq "PROD"){$apdevlip = $PRODAppliance}
+
 Write-Host "$(Write-TimeNumberSign) Selected Applicance: [$($apdevlip.ToUpper())]" -ForegroundColor Yellow
 Logaction "Selected Applicance: [$($apdevlip.ToUpper())]"
 $ALWebSession = Connect-alsession -aplip $apdevlip -Credential $Credential

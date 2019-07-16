@@ -31,9 +31,11 @@ $ErrorActionPreference = "Continue"
 
 # Variables
 $Skiplast = "3"
+$DTAApliance = "agofxdelmd01.nac.ppg.com"
+$PRODAppliance = "agofxdelm01.nac.ppg.com"
 
 # LOGGING and FUNCTIONS
-$logpath = "\\nac.ppg.com\dfs\Citrix\Sources\XD\Scripts\Logs"
+$logpath = "loguncpathhere"
 if (!(test-path $logpath)){try{New-Item -ItemType directory -Path $loglocation -Force}catch [Exception]{Write-warning $_.Exception.Message}}
 $LogFile = "CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.log"
 $LogFileName = $logpath + "\$LogFile"
@@ -91,8 +93,8 @@ if ($Credential -ne [System.Management.Automation.PSCredential]::Empty)
 }
 
 # Connect to the Appliance
-if ($Environment -eq "DTA"){$apdevlip = "agofxdelmd01.nac.ppg.com"}
-elseif ($Environment -eq "PROD"){$apdevlip = "agofxdelm01.nac.ppg.com"}
+if ($Environment -eq "DTA"){$apdevlip = $DTAApliance}
+elseif ($Environment -eq "PROD"){$apdevlip = $PRODAppliance}
 Write-Host "$(Write-TimeNumberSign) Selected Applicance: [$($apdevlip.ToUpper())]" -ForegroundColor Yellow
 Logaction "Selected Applicance: [$($apdevlip.ToUpper())]"
 $ALWebSession = Connect-alsession -aplip $apdevlip -Credential $Credential 

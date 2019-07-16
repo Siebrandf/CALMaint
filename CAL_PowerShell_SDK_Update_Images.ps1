@@ -23,17 +23,19 @@ $Environment = "DTA",
 $Credential = [System.Management.Automation.PSCredential]::Empty
 )  
 
+# Define error action preference
+$ErrorActionPreference = "Continue"
+
 # Provide Global Variables ###
-$VerbosePreference = "silentlycontinue"
+$DTAApliance = "agofxdelmd01.nac.ppg.com"
+$PRODAppliance = "agofxdelm01.nac.ppg.com"
 $ALOSLayerName = "W10_OS_1803" # <<-- Name of the OS layer that you would like to use
 $ALOSLayerRevisionName = "1803S" # <<-- Name of the OS Layer Revision that the revision should match
 $ALPLPubLayerName = "W10_PL_PUB"
 $ALAPPLayerNames = @("W10_APP_Office_2016","W10_APP_GENERAL","W10_APP_CORE","W10_APP_Optimize_R")
-if ($Environment -eq "DTA"){$apdevlip = "agofxdelmd01.nac.ppg.com"}
-elseif ($Environment -eq "PROD"){$apdevlip = "agofxdelm01.nac.ppg.com"}
 
 # LOGGING and FUNCTIONS
-$logpath = "\\nac.ppg.com\dfs\Citrix\Sources\XD\Scripts\Logs"
+$logpath = "loguncpathhere"
 if (!(test-path $logpath)){try{New-Item -ItemType directory -Path $loglocation -Force}catch [Exception]{Write-warning $_.Exception.Message}}
 $LogFile = "CAL_PowerShell_SDK_Update_Images.log"
 $LogFileName = $logpath + "\$LogFile"
@@ -86,7 +88,10 @@ if ($Credential -ne [System.Management.Automation.PSCredential]::Empty)
 }
 
 # Connect to the DEV Appliance
+if ($Environment -eq "DTA"){$apdevlip = $DTAApliance}
+elseif ($Environment -eq "PROD"){$apdevlip = $PRODAppliance}
 Write-Host "$(Write-TimeNumberSign) Selected Applicance: [$($apdevlip.ToUpper())]" -ForegroundColor Yellow
+Logaction "Selected Applicance: [$($apdevlip.ToUpper())]"
 $ALWebSession = Connect-alsession -aplip $apdevlip -Credential $Credential
 
 # SCRIPT ------------------------
