@@ -4,7 +4,7 @@
     .Description 
         Retrieve all revisions available for Unique Image names, and delete the ones older than the latest three revisions.
     .Example 
-        CAL_PowerShell_SDK_Cleanup_Obsolete_Images_DTA_V1.0.ps1
+        CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1
     .Notes
         Author: Siebrand Feenstra - s.feenstra@loginconsultants.nl
 #>
@@ -12,10 +12,9 @@
 [cmdletbinding(SupportsShouldProcess=$True)]
 
 param(
-# The LayerType to process, either OSLayer or Applayer.
-[parameter(Mandatory=$false)]
+[parameter(Mandatory=$true)]
 [ValidateSet("DTA", "PROD")]
-$Environment = "DTA",
+$Environment = "DTA", # -> The environment to process, either DTA or PROD.
 [ValidateNotNull()]
 [System.Management.Automation.PSCredential]
 [System.Management.Automation.Credential()]
