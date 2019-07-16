@@ -5,6 +5,9 @@
         Retrievs all revisions available for a given Layer type (OS, Platform or App) and delete the ones not assigned while keep the last two.
     .Example 
         CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1 -LayerType AppLayer -Environment DTA
+    .Notes
+        Author: Siebrand Feenstra - s.feenstra@loginconsultants.nl
+
 #>
 
 [cmdletbinding(SupportsShouldProcess=$True)]
@@ -28,8 +31,6 @@ $ErrorActionPreference = "Continue"
 
 # Variables
 $Skiplast = "3"
-if ($Environment -eq "DTA"){$apdevlip = "yourdevapplianceunchere"}
-elseif ($Environment -eq "PROD"){$apdevlip = "yourdevapplianceunchere"}
 
 # LOGGING and FUNCTIONS
 $logpath = "\\nac.ppg.com\dfs\Citrix\Sources\XD\Scripts\Logs"
@@ -54,7 +55,6 @@ Logaction "--- CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions ---"
 # MODULES -----------------------
 Import-Module "$(Get-ScriptDirectory)\LIC_Function_Library.psm1" -DisableNameChecking
 # install-Module -Name ctxal-sdk -Verbose -Scope AllUsers
-# install-Module -Name vmware.powercli -Verbose -Scope AllUsers -allowclobber
 # Update-Module -Name ctxal-sdk
 
 # Verify credentials
@@ -91,6 +91,8 @@ if ($Credential -ne [System.Management.Automation.PSCredential]::Empty)
 }
 
 # Connect to the Appliance
+if ($Environment -eq "DTA"){$apdevlip = "agofxdelmd01.nac.ppg.com"}
+elseif ($Environment -eq "PROD"){$apdevlip = "agofxdelm01.nac.ppg.com"}
 Write-Host "$(Write-TimeNumberSign) Selected Applicance: [$($apdevlip.ToUpper())]" -ForegroundColor Yellow
 Logaction "Selected Applicance: [$($apdevlip.ToUpper())]"
 $ALWebSession = Connect-alsession -aplip $apdevlip -Credential $Credential 
@@ -201,7 +203,7 @@ Logaction "$(Write-TimeIndent) Layer to process is of type: $LayerType"
         Write-Host "$(Write-TimeIndent) Process layer [$($ALOsLayer.Name)]" -ForegroundColor Cyan
         Logaction "Process layer [$($ALOsLayer.Name)]"
         $ALOsLayerRevisions = Get-ALOsLayerDetail -websession $ALWebSession -id $ALOsLayer.Id
-        $ALOsLayerLatestRevision = $ALOsLayerRevisions.Revisions.OsLayerRevisionDetail | Where-Object {($_.State -eq "Deployable") -and ($_.DisplayedVersion -notmatch "1803R")} | Sort-Object DisplayedVersion -Descending | Select-Object -First 1
+        $ALOsLayerLatestRevision = $ALOsLayerRevisions.Revisions.OsLayerRevisionDetail | Where-Object {($_.State -eq "Deployable") -and ($_.DisplayedVersion -notmatch "1803R") -and ($_.DisplayedVersion -notmatch "1809")} | Sort-Object DisplayedVersion -Descending | Select-Object -First 1
         Write-Host "$(Write-TimeIndent) Most recent layer revision for [$($ALOsLayer.Name)] is [$($ALOsLayerLatestRevision.DisplayedVersion)]" -ForegroundColor Yellow
         Logaction "Most recent layer revision for [$($ALOsLayer.Name)] is [$($ALOsLayerLatestRevision.DisplayedVersion)]"
     

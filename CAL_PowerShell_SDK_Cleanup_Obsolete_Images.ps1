@@ -5,6 +5,8 @@
         Retrieve all revisions available for Unique Image names, and delete the ones older than the latest three revisions.
     .Example 
         CAL_PowerShell_SDK_Cleanup_Obsolete_Images_DTA_V1.0.ps1
+    .Notes
+        Author: Siebrand Feenstra - s.feenstra@loginconsultants.nl
 #>
 
 [cmdletbinding(SupportsShouldProcess=$True)]
@@ -21,12 +23,11 @@ $Credential = [System.Management.Automation.PSCredential]::Empty
 )  
 
 # Define error action preference
+# Extra comments
 $ErrorActionPreference = "Continue"
 
 # Variables
 $Skiplast = "3"
-if ($Environment -eq "DTA"){$apdevlip = "yourdevapplianceunchere"}
-elseif ($Environment -eq "PROD"){$apdevlip = "yourdevapplianceunchere"}
 
 # LOGGING and FUNCTIONS
 $logpath = "\\nac.ppg.com\dfs\Citrix\Sources\XD\Scripts\Logs"
@@ -86,6 +87,8 @@ if ($Credential -ne [System.Management.Automation.PSCredential]::Empty)
 }
 
 # Connect to the DEV Appliance
+if ($Environment -eq "DTA"){$apdevlip = "agofxdelmd01.nac.ppg.com"}
+elseif ($Environment -eq "PROD"){$apdevlip = "agofxdelm01.nac.ppg.com"}
 Write-Host "$(Write-TimeNumberSign) Selected Applicance: [$($apdevlip.ToUpper())]" -ForegroundColor Yellow
 Logaction "Selected Applicance: [$($apdevlip.ToUpper())]"
 $ALWebSession = Connect-alsession -aplip $apdevlip -Credential $Credential
@@ -126,7 +129,7 @@ if ($Selection -eq $null)
     Continue
 }
 
-    Write-Host "$(Write-TimeIndent) The following Image revisions are candidates to be removed: [$($Selection -join ('|'))]" -ForegroundColor Yellow
+    Write-Host "$(Write-TimeIndent) The following Image revisions are candidates to be removed: [$($Selection -join ('|'))]" -ForegroundColor Cyan
     Logaction "The following Image revisions are candidates to be removed: [$($Selection -join ('|'))]"
 
     foreach ($Image in $Selection)
@@ -136,7 +139,7 @@ if ($Selection -eq $null)
         Logaction "Process Image [$($Imagetobremoved.Name)] with id [$($Imagetobremoved.id)])"
 
         Try {
-            Remove-ALImage -websession $ALWebSession -id $($Imagetobremoved.id) -Confirm:$false
+            [void] (Remove-ALImage -websession $ALWebSession -id $($Imagetobremoved.id) -Confirm:$false)
             Write-Host "$(Write-TimeIndent) Succesfully Removed Image [$($Imagetobremoved.Name)] with id [$($Imagetobremoved.id)])" -ForegroundColor Green
             Logaction "Succesfully Removed Image [$($Imagetobremoved.Name)] with id [$($Imagetobremoved.id)])"
             } Catch [Exception] {Write-Error "Remove-ALImage - $_"}
