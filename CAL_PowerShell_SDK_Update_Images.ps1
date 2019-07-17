@@ -27,15 +27,15 @@ $Credential = [System.Management.Automation.PSCredential]::Empty
 $ErrorActionPreference = "Continue"
 
 # Provide Global Variables ###
-$DTAApliance = "agofxdelmd01.nac.ppg.com"
-$PRODAppliance = "agofxdelm01.nac.ppg.com"
+$DTAApliance = "DTAAppliancehere"
+$PRODAppliance = "PRODAppliancehere"
 $ALOSLayerName = "W10_OS_1803" # <<-- Name of the OS layer that you would like to use
 $ALOSLayerRevisionName = "1803S" # <<-- Name of the OS Layer Revision that the revision should match
 $ALPLPubLayerName = "W10_PL_PUB"
 $ALAPPLayerNames = @("W10_APP_Office_2016","W10_APP_GENERAL","W10_APP_CORE","W10_APP_Optimize_R")
+$logpath = "loguncpathhere"
 
 # LOGGING and FUNCTIONS
-$logpath = "loguncpathhere"
 if (!(test-path $logpath)){try{New-Item -ItemType directory -Path $loglocation -Force}catch [Exception]{Write-warning $_.Exception.Message}}
 $LogFile = "CAL_PowerShell_SDK_Update_Images.log"
 $LogFileName = $logpath + "\$LogFile"

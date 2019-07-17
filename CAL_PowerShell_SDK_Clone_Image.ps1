@@ -29,11 +29,11 @@ $ErrorActionPreference = "Continue"
 
 # Variables
 $Skiplast = "3"
-$DTAApliance = "agofxdelmd01.nac.ppg.com"
-$PRODAppliance = "agofxdelm01.nac.ppg.com"
+$DTAApliance = "DTAAppliancehere"
+$PRODAppliance = "PRODAppliancehere"
+$logpath = "loguncpathhere"
 
 # LOGGING and FUNCTIONS
-$logpath = "loguncpathhere"
 if (!(test-path $logpath)){try{New-Item -ItemType directory -Path $loglocation -Force}catch [Exception]{Write-warning $_.Exception.Message}}
 $LogFile = "CAL_PowerShell_SDK_Clone_Image.log"
 $LogFileName = $logpath + "\$LogFile"

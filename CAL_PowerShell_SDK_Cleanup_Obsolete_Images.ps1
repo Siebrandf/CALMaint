@@ -26,11 +26,12 @@ $ErrorActionPreference = "Continue"
 
 # Variables
 $Skiplast = "3"
-$DTAApliance = "agofxdelmd01.nac.ppg.com"
-$PRODAppliance = "agofxdelm01.nac.ppg.com"
+$DTAApliance = "DTAAppliancehere"
+$PRODAppliance = "PRODAppliancehere"
+$ImageNameRegEx = "[SR]_[W]\d{2}_[A-Z]{3,5}_(IMG)_[R]\d{3}"
+$logpath = "loguncpathhere"
 
 # LOGGING and FUNCTIONS
-$logpath = "loguncpathhere"
 if (!(test-path $logpath)){try{New-Item -ItemType directory -Path $loglocation -Force}catch [Exception]{Write-warning $_.Exception.Message}}
 $LogFile = "CAL_PowerShell_SDK_Cleanup_Obsolete_Images.log"
 $LogFileName = $logpath + "\$LogFile"
@@ -110,8 +111,8 @@ break
 
 Write-Host "$(Write-TimeIndent) Retrieve matching image names" -ForegroundColor Yellow
 Logaction "Retrieve matching image names"
-$my_match_list = @($imagesdev.Name -match "[SR]_[W]\d{2}_[A-Z]{3,5}_(IMG)_[R]\d{3}" | ForEach-Object {$_.Substring(0, $_.LastIndexOf("R"))} | Select-Object -Unique)
-$my_strings_list = @($imagesdev.Name -match "[SR]_[W]\d{2}_[A-Z]{3,5}_(IMG)_[R]\d{3}")
+$my_match_list = @($imagesdev.Name -match $ImageNameRegEx | ForEach-Object {$_.Substring(0, $_.LastIndexOf("R"))} | Select-Object -Unique)
+$my_strings_list = @($imagesdev.Name -match $ImageNameRegEx)
 
 foreach($i in $my_match_list){
 Write-Host "$(Write-TimeIndent) matching item: $i" -ForegroundColor Yellow
