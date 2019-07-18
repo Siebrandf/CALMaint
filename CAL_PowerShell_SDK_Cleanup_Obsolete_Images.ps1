@@ -1,10 +1,8 @@
 ﻿<# 
     .Synopsis 
-        --- Removes Image revisions other than the last three ---
-    .Description 
         Cleanup Images per ‘unique role’ and ‘revision number’ on the layering appliance skipping the last three (by default)
     .Example 
-        CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1 [-Environment {DTA|PROD}] [-Credential <$credential>]
+        CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1 [-Environment {DTA|PROD}] [-Credential <pscredential>]
     .Notes
         Author: Siebrand Feenstra - s.feenstra@loginconsultants.nl
 #>

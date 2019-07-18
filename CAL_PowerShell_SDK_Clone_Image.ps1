@@ -1,11 +1,11 @@
 ﻿<# 
     .Synopsis 
-        ---- Create App Layer on Citrix App Layering and VMware vSphere ----
-        Run on management server with PowerCLI installed
-    .Description 
-        A Detailed Description of what the command does 
+        Clone existing image(s) from the DTA appliance to the Prod Applicance using a (multi-select) gridview selection window. 
+        It also provides a argument to publish the image from the prod appliance after import. One at the time.
+        The ‘inputpath’ variable can be used to provide the path to the ‘Images4$environment.json file which includes an attribute for 
+        ‘ImageReference’ for which the latest image revisions should be cloned automatically.
     .Example 
-        CAL_PowerShell_SDK_WSUS_Update_Layer_V1.0 -LayerType OS
+        CAL_PowerShell_SDK_Clone_Image.ps1 [-publish {NO|YES}] [-Credential <$credential>] [-inputpath <UNCpathtojson>]
     .Notes
         Author: Siebrand Feenstra - s.feenstra@loginconsultants.nl
 #>
@@ -17,7 +17,7 @@ param(
 [ValidateSet("YES", "NO")]
 $publish = "NO", #define if image need to be published or not
 [parameter(Mandatory=$false)]
-$Inputpath, # provide the path to the Images4$Environment.json file containing the references names for the images to export
+$Inputpath, # provide the path to the 'Images4$Environment.json' file containing the references names for the images to export
 [ValidateNotNull()]
 [System.Management.Automation.PSCredential]
 [System.Management.Automation.Credential()]

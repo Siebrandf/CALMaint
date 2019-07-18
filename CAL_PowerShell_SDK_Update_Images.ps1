@@ -1,11 +1,9 @@
 ﻿<# 
     .Synopsis 
-        ---- Checks if the latest matching image revisions include the latest OS, Publisng and Office layer revision ----
-        --- Based on reversed Engineered Powershell SDK for Citrix Application Layering ---
-    .Description 
-        Checks if the latest matching image revisions include the latest OS, Publisng and Office layer revision
+        Verifies if the latest revision for all existing image(s) based on their unique ‘role name’ have the latest OS, Platform and predefined App Layer revisions. 
+        If not, the images will be cloned with an increased revision number including the latest changes. 
     .Example 
-        CAL_PowerShell_SDK_Update_Image -environment DTA -Credential $Credential
+        CAL_PowerShell_SDK_Update_Images.ps1 [-Environment {DTA|PROD}] [-Credential <pscredential>]
     .Notes
         Author: Siebrand Feenstra - s.feenstra@loginconsultants.nl
 #>
@@ -30,9 +28,9 @@ $ErrorActionPreference = "Continue"
 $DTAApliance = "DTAAppliancehere"
 $PRODAppliance = "PRODAppliancehere"
 $ALOSLayerName = "W10_OS_1803" # <<-- Name of the OS layer that you would like to use
-$ALOSLayerRevisionName = "1803S" # <<-- Name of the OS Layer Revision that the revision should match
-$ALPLPubLayerName = "W10_PL_PUB"
-$ALAPPLayerNames = @("W10_APP_Office_2016","W10_APP_GENERAL","W10_APP_CORE","W10_APP_Optimize_R")
+$ALOSLayerRevisionName = "1803S" # <<-- Name of the OS Layer Revision to match with
+$ALPLPubLayerName = "W10_PL_PUB" # <<-- Name of the Platform Layer to match with
+$ALAPPLayerNames = @("W10_APP_Office_2016","W10_APP_GENERAL","W10_APP_CORE") # <<-- Name of the Applications Layers to match with
 $logpath = "loguncpathhere"
 
 # LOGGING and FUNCTIONS

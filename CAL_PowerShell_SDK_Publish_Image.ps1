@@ -1,13 +1,11 @@
 <# 
-    .Synopsis 
-        ---- Publish Layered Image from ELM to Datastore ----
-        Run on management server CTXAL Module Installed
     .Description 
-        ---- Publish Layered Image from ELM ----
-        '-Inputpath' can be used to select the latest image revision to publish based on the reference names in the inputfile
-        CAL_PowerShell_SDK_Define_Images2Process.ps1 is used to build the Images4$Environment.csv file, where $Environment references DTA or PROD
+        Publish image{s} from the appliance. These jobs are executed in parallel. 
+        The ‘inputpath’ variable can be used to provide the path to the ‘Images4$environment.json’ file which includes an attribute for 
+        ‘ImageReference’ which trigger publishing of the latest image revisions for the given references automatically. 
+        The ‘Images4$environment.json’ is updated during execution with the ImageId and ImageName of the Images being published.
     .Example 
-        CAL_PowerShell_SDK_Publish_Image -Environment DTA -Credential $Credential [-Inputpath \\nac.ppg.com\dfs\Citrix\Sources\XD\Scripts\Images2Process]
+        CAL_PowerShell_SDK_Publish_Image.ps1 [-Environment {DTA|PROD}] [-Credential <pscredential>] [-Inputpath UNCpathtojsonfile]
     .Notes
         Author: Siebrand Feenstra - s.feenstra@loginconsultants.nl
 #>
