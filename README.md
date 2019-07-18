@@ -47,16 +47,16 @@ Update-Module -Name ctxal-sdk
 
 ## Cleanup Obsolete Images
 
-```java
 NAME
     CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1
 
 SYNOPSIS
     Cleanup Images per ‘unique role’ and ‘revision number’ on the layering appliance skipping the last three (by default)
-
+```powershell
 SYNTAX
     CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1 [-Environment {DTA|PROD}] [-Credential <$credential>]
-
+```
+```
 PARAMETERS
     -Environment <string>
         The environment parameter let you choose between two appliance environments.
@@ -70,17 +70,17 @@ PARAMETERS
 
 ## Cleanup Obsolete Revisions
 
-```java
 NAME
     CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1
 
 SYNOPSIS
     Cleanup layer revision based on type (OS, App and Platform) name and ‘revision number’ on the layering appliance. 
     Remove all layers not currently being assigned except the two having the highest revision number and not being assigned.
-
+```powershell
 SYNTAX
     CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1 [-LayerType {OSLayer|AppLayer|PlatformLayer}] [-Environment {DTA|PROD}] [-Credential <pscredential>] [-Whatif]
-
+```
+```
 PARAMETERS
     -LayerType <string>
         Provide the Layer type to process.
@@ -99,7 +99,6 @@ PARAMETERS
 
 ## Clone Images to different appliance
 
-```java
 NAME
     CAL_PowerShell_SDK_Clone_Image.ps1
 
@@ -109,9 +108,11 @@ SYNOPSIS
     The ‘inputpath’ variable can be used to provide the path to the ‘Images4$environment.json file which includes ‘ImageReference’ attribute 
     which clones the highest image revisions automatically.
 
+```powershell
 SYNTAX
     CAL_PowerShell_SDK_Clone_Image.ps1 [-publish {NO|YES}] [-Credential <pscredential>] [-inputpath <pathtojson>]
-
+```
+```
 PARAMETERS
     -Publish <string>
         Provide the Environment to process.
@@ -131,7 +132,6 @@ PARAMETERS
 
 ## Publish Images
 
-```java
 NAME
     CAL_PowerShell_SDK_Publish_Image.ps1
 
@@ -141,9 +141,11 @@ SYNOPSIS
     ‘ImageReference’ which trigger publishing of the latest image revisions for the given references automatically. 
     The ‘Images4$environment.json’ is updated during execution with the ImageId and ImageName of the Images being published.
 
+```powershell
 SYNTAX
     CAL_PowerShell_SDK_Publish_Image.ps1 [-Environment {DTA|PROD}] [-Credential <pscredential>] [-Inputpath UNCpathtojsonfile]
-
+```
+```
 PARAMETERS
     -Environment <string>
         Provide the Environment to process.
@@ -162,16 +164,16 @@ PARAMETERS
 
 ## Update Images
 
-```java
 NAME
     CAL_PowerShell_SDK_Update_Images.ps1
 
 SYNOPSIS
     Verifies if the latest revision for all existing image(s) based on their unique ‘role name’ have the latest OS, Platform and predefined App Layer revisions. If not, the images will be cloned with an increased revision number including the latest changes. 
-
+```powershell
 SYNTAX
     CAL_PowerShell_SDK_Update_Images.ps1 [-Environment {DTA|PROD}] [-Credential <pscredential>]
-
+```
+```
 PARAMETERS
     -Environment <string>
         Provide the Environment to process.
@@ -185,7 +187,6 @@ PARAMETERS
 
 ## Function Library
 
-```java
 NAME
     LIC_Function_Library.psm1
 
@@ -197,7 +198,7 @@ EXAMPLE
 
 NOTES
     Make sure the LIC_Function_Library.psm1 is in the same folder as the script which calls it.
-```
+
 ```powershell
 function Get-ScriptDirectory {
     if ($psise) {Split-Path $psise.CurrentFile.FullPath}
@@ -210,14 +211,13 @@ Import-Module "$(Get-ScriptDirectory)\LIC_Function_Library.psm1" -DisableNameChe
 
 ## Images2Process Json
 
-```java
 NAME
     Images4$Environment.json
 
 SYNOPSIS
     The file below is an example of an Image4$environment json file used as optional input for clone, and publishing and update catalog activities where $environment represent the environment which is provided trough command line. Which can either be DTA, DEV, ACC or PROD. 
     'CAL_PowerShell_SDK_Publish_Image.ps1' Updates the json file with the id and name for the highest available revision for a given referencename. 
-```
+
 ```json
 [
     {
