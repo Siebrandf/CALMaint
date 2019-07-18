@@ -39,7 +39,7 @@ Update-Module -Name ctxal-sdk
 ```
 
 ## CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1
-
+```powershell
 NAME
     CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1
 
@@ -50,51 +50,40 @@ SYNTAX
     CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1 [-Environment {DTA|PROD}] [-Credential <$credential>]
 
 PARAMETERS
-    -Environment <LayerType>
+    -Environment <string>
         The environment parameter let you choose between two appliance environments.
         Valid values are DTA and PROD
         Required?                    True
     
-    -Credential
+    -Credential <pscredential>
         Either provide a PSCredential object or a username
         Required?                    True
+```
 
 ## CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1
-
+```powershell
 NAME
     CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1
 
+DESCRIPTION
+    Cleanup layer revision based on type (OS, App and Platform) name and ‘revision number’ on the layering appliance. 
+    Remove all layers not currently being assigned except the two having the highest revision number and not being assigned
+
 SYNTAX
-    CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1 [-LayerType] <LayerType> [-Environment] <Environment> [-Skiplast] <Int32> [-Confirm] [-Whatif]
+    CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1 [-LayerType {OSLayer|AppLayer|PlatformLayer}] [-Environment {DTA|PROD}] [-Credential <pscredential>] [-Whatif]
 
 PARAMETERS
-    -LayerType <LayerType>
+    -LayerType <string>
         Provide the Layer type to process.
         Valid values are OsLayer, PlatformLayer, AppLayer
         Required?                    True
 
-    -Environment <Environment>
+    -Environment <string>
         Provide the Environment to process.
         Valid values are DTA, Prod
         Required?                    True
-
-    -Skiplast <Int32>
-        Provide the number of revision to keep other than the ones currently in use
-        Default                      2   
-        Required?                    false
-
-    -Confirm
-        Required?                    false
-
-
-EXAMPLES
-
-------------------------- EXAMPLE 1 --------------------------
-
-    C:\PS> CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1 -LayerType AppLayer -Environment DTA -Confirm:$false
-
-    Description
-
-    -----------
-
-    The two last revisions older than the ones associated for the DTA appliance are deleted without confirmation
+    
+    -Credential <pscredential>
+        Either provide a PSCredential object or a username
+        Required?                    True
+```

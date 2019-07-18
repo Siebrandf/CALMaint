@@ -2,12 +2,12 @@
     .Synopsis 
         --- Removes obsolete layer revisions ---
     .Description 
-        Retrievs all revisions available for a given Layer type (OS, Platform or App) and delete the ones not assigned while keep the last two.
+        Cleanup layer revision based on type (OS, App and Platform) name and ‘revision number’ on the layering appliance. 
+        Remove all layers not currently being assigned except the two having the highest revision number and not being assigned
     .Example 
-        CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1 -LayerType AppLayer -Environment DTA
+        CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1 [-LayerType {OSLayer|AppLayer|PlatformLayer}] [-Environment {DTA|PROD}] [-Credential <$Credential>]
     .Notes
         Author: Siebrand Feenstra - s.feenstra@loginconsultants.nl
-
 #>
 
 [cmdletbinding(SupportsShouldProcess=$True)]
