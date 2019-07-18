@@ -14,8 +14,8 @@ Source 'Reverse Engineered SDK to manage the Citrix App Layering appliance' http
     + [Install Manually](#install-manually)
     + [Install PSGallery](#install-psgallery)
     + [Update PSGallery](#update-psgallery)
-  * [CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1](#CAL_PowerShell_SDK_Cleanup_Obsolete_Images)
-  * [CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1](#CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions)
+  * [Cleanup Obsolete Images](#Cleanup-Obsolete-Images)
+  * [Cleanup Obsolete Revisions](#Cleanup-Obsolete-Revisions)
 
 ## Install and Update
 
@@ -39,7 +39,8 @@ Find-Module -name ctxal-sdk
 Update-Module -Name ctxal-sdk
 ```
 
-## CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1
+## Cleanup Obsolete Images
+
 ```java
 NAME
     CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1
@@ -61,7 +62,8 @@ PARAMETERS
         Required?                    True
 ```
 
-## CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1
+## Cleanup Obsolete Revisions
+
 ```java
 NAME
     CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1
