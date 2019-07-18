@@ -14,7 +14,7 @@ Source 'Reverse Engineered SDK to manage the Citrix App Layering appliance' http
     + [Install Manually](#install-manually)
     + [Install PSGallery](#install-psgallery)
     + [Update PSGallery](#update-psgallery)
-  * [CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1](#CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1)
+- [CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1](#CAL_PowerShell_SDK_Cleanup_Obsolete_Images)
 
 ## Install and Update
 
