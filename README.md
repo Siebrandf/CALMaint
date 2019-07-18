@@ -215,7 +215,7 @@ NAME
     Images4$Environment.json
 
 SYNOPSIS
-    The file below is an example of an Image4$environment json file used as input for clone, publishing and update catalog activities where $environment represent the environment which is provided trough command line. Which can either be DEV, ACC or PROD. 
+    The file below is an example of an Image4$environment json file used as optional input for clone, and publishing and update catalog activities where $environment represent the environment which is provided trough command line. Which can either be DTA, DEV, ACC or PROD. 
     'CAL_PowerShell_SDK_Publish_Image.ps1' Updates the json file with the id and name for the highest available revision for a given referencename. 
 ```
 ```json
