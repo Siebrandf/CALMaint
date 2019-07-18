@@ -2,9 +2,9 @@
     .Synopsis 
         --- Removes Image revisions other than the last three ---
     .Description 
-        Retrieve all revisions available for Unique Image names, and delete the ones older than the latest three revisions.
+        Cleanup Images per ‘unique role’ and ‘revision number’ on the layering appliance skipping the last three (by default)
     .Example 
-        CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1
+        CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1 [-Environment {DTA|PROD}] [-Credential <$credential>]
     .Notes
         Author: Siebrand Feenstra - s.feenstra@loginconsultants.nl
 #>

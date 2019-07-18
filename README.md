@@ -14,7 +14,7 @@ Source 'Reverse Engineered SDK to manage the Citrix App Layering appliance' http
     + [Install Manually](#install-manually)
     + [Install PSGallery](#install-psgallery)
     + [Update PSGallery](#update-psgallery)
-  * [Script Operation](#Script-Operation)
+  * [CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1](#CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1)
 
 ## Install and Update
 
@@ -38,7 +38,28 @@ Find-Module -name ctxal-sdk
 Update-Module -Name ctxal-sdk
 ```
 
-## Script Operation
+## CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1
+
+NAME
+    CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1
+
+DESCRIPTION
+    Cleanup Images per ‘unique role’ and ‘revision number’ on the layering appliance skipping the last three (by default)
+
+SYNTAX
+    CAL_PowerShell_SDK_Cleanup_Obsolete_Images.ps1 [-Environment {DTA|PROD}] [-Credential <$credential>]
+
+PARAMETERS
+    -Environment <LayerType>
+        The environment parameter let you choose between two appliance environments.
+        Valid values are DTA and PROD
+        Required?                    True
+    
+    -Credential
+        Either provide a PSCredential object or a username
+        Required?                    True
+
+## CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1
 
 NAME
     CAL_PowerShell_SDK_Cleanup_Obsolete_Revisions.ps1
