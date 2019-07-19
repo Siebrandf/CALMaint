@@ -151,7 +151,7 @@ Logaction "Layer to process is of type: $LayerType"
             
             Try 
             {
-                Remove-ALAppLayerRev -websession $ALWebSession -appid $AppLayerRevCanDelete.Layerid -apprevid $AppLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable AppLayerRevDeleted -Confirm:$false | Out-Null
+                Remove-ALAppLayerRev -websession $ALWebSession -appid $AppLayerRevCanDelete.Layerid -apprevid $AppLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable AppLayerRevDeleted | Out-Null
             }   Catch [Exception] 
             {
                 Write-Error "$(Write-TimeIndent) Remove-ALAppLayerRev - $_"
@@ -239,7 +239,7 @@ Logaction "$(Write-TimeIndent) Layer to process is of type: $LayerType"
 
             Try 
             {
-                Remove-ALOsLayerRev -websession $ALWebSession -Osid $OsLayerRevCanDelete.Layerid -Osrevid $OsLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable OsLayerRevDeleted -Confirm:$false | Out-Null
+                Remove-ALOsLayerRev -websession $ALWebSession -Osid $OsLayerRevCanDelete.Layerid -Osrevid $OsLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable OsLayerRevDeleted | Out-Null
             }   Catch [Exception] 
             {
                 Write-Error "$(Write-TimeIndent) Remove-ALOsLayerRev - $_"
@@ -325,7 +325,7 @@ Logaction "$(Write-TimeIndent) Layer to process is of type: $LayerType"
             
             Try 
             {
-                Remove-ALPlatformLayerRev -websession $ALWebSession -Platformid $PlatformLayerRevCanDelete.Layerid -Platformrevid $PlatformLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable PlatformLayerRevDeleted -Confirm:$false | Out-Null
+                Remove-ALPlatformLayerRev -websession $ALWebSession -Platformid $PlatformLayerRevCanDelete.Layerid -Platformrevid $PlatformLayerRevCanDelete.id -fileshareid $fileshare.id -OutVariable PlatformLayerRevDeleted | Out-Null
             }   Catch [Exception] 
             {
                 Write-Error "$(Write-TimeIndent) Remove-ALPlatformLayerRev - $_"

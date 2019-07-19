@@ -138,7 +138,7 @@ if ($Selection -eq $null)
         Logaction "Process Image [$($Imagetobremoved.Name)] with id [$($Imagetobremoved.id)])"
 
         Try {
-            [void] (Remove-ALImage -websession $ALWebSession -id $($Imagetobremoved.id) -Confirm:$false)
+            [void] (Remove-ALImage -websession $ALWebSession -id $($Imagetobremoved.id))
             Write-Host "$(Write-TimeIndent) Succesfully Removed Image [$($Imagetobremoved.Name)] with id [$($Imagetobremoved.id)])" -ForegroundColor Green
             Logaction "Succesfully Removed Image [$($Imagetobremoved.Name)] with id [$($Imagetobremoved.id)])"
             } Catch [Exception] {Write-Error "Remove-ALImage - $_"}
