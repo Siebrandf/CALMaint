@@ -136,7 +136,15 @@ Logaction "Layer to process is of type: $LayerType"
 
         Write-Host "$(Write-TimeIndent) The following layer revisions are candidates to be removed: [$($AllAppLayerRevsCanDelete.DisplayedVersion -join ('|'))]" -ForegroundColor Yellow
         Logaction "The following layer revisions are candidates to be removed: [$($AllAppLayerRevsCanDelete.DisplayedVersion -join ('|'))]"
-
+        
+        # Check if the layer is not subject to active worktickets
+        if ((Get-ALStatus -ErrorAction 0 -websession $ALWebSession).Resourceargs.string -match $($ALAppLayer.Name))
+        {
+            Write-Host "$(Write-TimeIndent) Layer [$($ALAppLayer.Name)] is currently under maintenance. skipping..." -ForegroundColor Gray
+            Logaction "Layer [$($ALAppLayer.Name)] is currently under maintenance. skipping..."
+            Continue
+        }
+        
         foreach ($AppLayerRevCanDelete in $AllAppLayerRevsCanDelete){
             Write-Host "$(Write-TimeIndent) Process Layer Revision [$($AppLayerRevCanDelete.DisplayedVersion)] with id [$($AppLayerRevCanDelete.id)])" -ForegroundColor Yellow
             Logaction "Process Layer Revision [$($AppLayerRevCanDelete.DisplayedVersion)] with id [$($AppLayerRevCanDelete.id)])"
@@ -217,6 +225,14 @@ Logaction "$(Write-TimeIndent) Layer to process is of type: $LayerType"
         Write-Host "$(Write-TimeIndent) The following layer revisions are candidates to be removed: [$($AllOsLayerRevsCanDelete.DisplayedVersion -join ('|'))]" -ForegroundColor Yellow
         Logaction "The following layer revisions are candidates to be removed: [$($AllOsLayerRevsCanDelete.DisplayedVersion -join ('|'))]"
 
+        # Check if the layer is not subject to active worktickets
+        if ((Get-ALStatus -ErrorAction 0 -websession $ALWebSession).Resourceargs.string -match $($ALOsLayer.Name))
+        {
+            Write-Host "$(Write-TimeIndent) Layer [$($ALOsLayer.Name)] is currently under maintenance. skipping..." -ForegroundColor Gray
+            Logaction "Layer [$($ALOsLayer.Name)] is currently under maintenance. skipping..."
+            Continue
+        }
+        
         foreach ($OsLayerRevCanDelete in $AllOsLayerRevsCanDelete){
             Write-Host "$(Write-TimeIndent) Process Layer Revision [$($OsLayerRevCanDelete.DisplayedVersion)] with id [$($OsLayerRevCanDelete.id)])" -ForegroundColor Yellow
             Logaction "Process Layer Revision [$($OsLayerRevCanDelete.DisplayedVersion)] with id [$($OsLayerRevCanDelete.id)])"
@@ -295,6 +311,14 @@ Logaction "$(Write-TimeIndent) Layer to process is of type: $LayerType"
         Write-Host "$(Write-TimeIndent) The following layer revisions are candidates to be removed: [$($AllPlatformLayerRevsCanDelete.DisplayedVersion -join ('|'))]" -ForegroundColor Yellow
         Logaction "The following layer revisions are candidates to be removed: [$($AllPlatformLayerRevsCanDelete.DisplayedVersion -join ('|'))]"
 
+        # Check if the layer is not subject to active worktickets
+        if ((Get-ALStatus -ErrorAction 0 -websession $ALWebSession).Resourceargs.string -match $($ALPlatformLayer.Name))
+        {
+            Write-Host "$(Write-TimeIndent) Layer [$($ALPlatformLayer.Name)] is currently under maintenance. skipping..." -ForegroundColor Gray
+            Logaction "Layer [$($ALPlatformLayer.Name)] is currently under maintenance. skipping..."
+            Continue
+        }
+        
         foreach ($PlatformLayerRevCanDelete in $AllPlatformLayerRevsCanDelete){
             Write-Host "$(Write-TimeIndent) Process Layer Revision [$($PlatformLayerRevCanDelete.DisplayedVersion)] with id [$($PlatformLayerRevCanDelete.id)])" -ForegroundColor Yellow
             Logaction "Process Layer Revision [$($PlatformLayerRevCanDelete.DisplayedVersion)] with id [$($PlatformLayerRevCanDelete.id)])"
