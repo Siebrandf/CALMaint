@@ -404,11 +404,11 @@ foreach ($imageDEV in $ImagesDEV)
         # Publish image when the attribute was provided.
         if ($publish -eq "YES")
         {
-            Write-Host "$(Write-TimeNumberSign ) publish property set for [$($imagetopublish.name)]" -ForegroundColor yellow
-            Logaction "publish property set for [$($imagetopublish.name)]"
+            Write-Host "$(Write-TimeNumberSign ) publish property set for [$ImageProdName]" -ForegroundColor yellow
+            Logaction "publish property set for [$ImageProdName]"
             $imagetopublish = Get-ALImage -websession $websessionPROD | Where-Object {$_.name -eq $ImageProdName}
-            Write-Host "$(Write-Timeindent ) publishing image [$($imagetopublish.name)] with id: [$($imagetopublish.id)]" -ForegroundColor yellow
-            Logaction "publishing image [$($imagetopublish.name)] with id: [$($imagetopublish.id)]"
+            Write-Host "$(Write-Timeindent ) publishing image [$ImageProdName] with id: [$($imagetopublish.id)]" -ForegroundColor yellow
+            Logaction "publishing image [$ImageProdName] with id: [$($imagetopublish.id)]"
 
             # Publish the image
             $invokealpublish = invoke-alpublish -websession $websessionPROD -imageid $($imagetopublish).id -Outvariable invokealpublish -Confirm:$false
@@ -421,14 +421,14 @@ foreach ($imageDEV in $ImagesDEV)
                 IF ($a -eq "99") {$a=0}
                 if (($invokealpublishStatus.Status -notlike "Running") -and ($invokealpublishStatus.Status -notlike "Pending")){
                     $a=100
-                    Write-Progress -Activity "Publishing image [$($imagetopublish.name)] done " -PercentComplete $a -Status "Finish."
+                    Write-Progress -Activity "Publishing image [$ImageProdName] done " -PercentComplete $a -Status "Finish."
                     Start-Sleep 1
                     Write-Progress "Done" "Done" -completed	
                     break
                 } ELSE {
                     $invokealpublishStatus = Get-ALStatus -id $invokealpublish -websession $websessionPROD
                     $a++
-                    Write-Progress -Activity "Publishing image [$($imagetopublish.name)] running, waiting until finished..." -PercentComplete $a -Status "Please wait..."
+                    Write-Progress -Activity "Publishing image [$ImageProdName] running, waiting until finished..." -PercentComplete $a -Status "Please wait..."
                     start-sleep 5
                     }
                 } While ($a -ne 100)
@@ -436,7 +436,7 @@ foreach ($imageDEV in $ImagesDEV)
             Write-Host "$(Write-TimeIndent) FINISHED publish" -ForegroundColor Green
             Logaction "FINISHED publish"      
         
-        } else {Write-Host "$(Write-TimeNumberSign) publish image property was not set for [$($imagetopublish.name)]" -ForegroundColor Yellow}
+        } else {Write-Host "$(Write-TimeNumberSign) publish image property was not set for [$ImageProdName]" -ForegroundColor Yellow}
 
     } # END Foreach ImagesProd
 
